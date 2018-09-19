@@ -14,7 +14,7 @@ public class Producer {
 
     public static void main(String[] args) throws Exception {
         Producer producer = new Producer();
-        for (int j = 0; j < 100000; j++ ) {
+        for (int j = 0; j < 100000; j++) {
 //            Expression e = new Expression(ThreadLocalRandom.current().nextInt(1, 3));
             Expression e = new Expression(4);
             for (int i = 0; i < e.getLen(); i++) {
@@ -23,6 +23,7 @@ public class Producer {
                     e.getOps()[i] = producer.getRandomOperation();
                 }
             }
+            producer.polish(e, 0, 3);
             System.out.println(e);
         }
     }
@@ -47,7 +48,18 @@ public class Producer {
         }
     }
 
-    private int[][]
+    private void polish(Expression e, int start, int end) throws Exception{
+        Thread.sleep(100);
+        if (end > start && new Random().nextDouble() < 0.8) {
+            int middle = ThreadLocalRandom.current().nextInt(start, end);
+            if (new Random().nextDouble() < 0.8) {
+                e.getParenthesis()[start][0]++;
+                e.getParenthesis()[end][1]++;
+            }
+            polish(e, start, middle);
+            polish(e, middle + 1, end);
+        }
+    }
 
     private int[][] getParenthesis2(int nums) {
         int[][] parenthesis = new int[nums][2];
