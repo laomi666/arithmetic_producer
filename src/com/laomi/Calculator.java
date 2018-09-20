@@ -1,13 +1,10 @@
 package com.laomi;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.zip.DeflaterOutputStream;
 
 /**
  * @author zkyyo
@@ -16,7 +13,7 @@ import java.util.zip.DeflaterOutputStream;
 public class Calculator {
     private static final List<String> operations = Arrays.asList("+", "-", "x", "÷");
 
-    public static double count(List<String> e) {
+    public static Double count(List<String> e) {
         Stack<String> stack = new Stack<>();
         for (String arg : e) {
             if (!")".equals(arg)) {
@@ -27,6 +24,9 @@ public class Calculator {
                     if ("(".equals(stack.peek())) {
                         stack.pop();
                         Number result = countWithoutParenthesis(subExpression);
+                        if (result == null) {
+                            return null;
+                        }
                         stack.push(result + "");
                         break;
                     } else {
@@ -39,15 +39,20 @@ public class Calculator {
 //        while (!stack.empty()) {
 //            System.out.println(stack.pop());
 //        }
+        Double result;
         if (stack.size() > 1) {
             List<String> subExpression = new LinkedList<>();
             while (!stack.empty()) {
                 subExpression.add(0, stack.pop());
             }
-            return (Double) countWithoutParenthesis(subExpression);
+            result = (Double) countWithoutParenthesis(subExpression);
+            if (result == null) {
+                return null;
+            }
         } else {
-            return Double.parseDouble(stack.pop());
+            result = Double.parseDouble(stack.pop());
         }
+        return result;
 
 //        return BigDecimal.valueOf(answer).setScale(1, RoundingMode.HALF_UP).doubleValue();
     }
@@ -62,7 +67,9 @@ public class Calculator {
         }
         start = 0;
         while ((index = getOperationIndex(exp, start, "+", "-")) != -1) {
-            operation(exp, index);
+            if (operation(exp, index) == -1) {
+                return null;
+            }
             start = index - 1;
         }
 
@@ -81,7 +88,7 @@ public class Calculator {
         return -1;
     }
 
-    private static void operation(List<String> e, int index) {
+    private static int operation(List<String> e, int index) {
         String op = e.get(index);
         double pre = Double.parseDouble(e.get(index - 1));
         double post = Double.parseDouble(e.get(index + 1));
@@ -100,11 +107,15 @@ public class Calculator {
                 e.add(index - 1, pre + post + "");
                 break;
             case "-":
+                if (pre < post) {
+                    return -1;
+                }
                 e.add(index - 1, pre - post + "");
                 break;
             default:
                 break;
         }
+        return 1;
     }
 
     public static void main(String[] args) {
