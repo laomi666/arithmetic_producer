@@ -3,6 +3,8 @@ package com.laomi;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -12,20 +14,36 @@ import java.util.concurrent.ThreadLocalRandom;
  **/
 public class Producer {
     private static final char[] OPERATIONS = {'+', '-', 'x', '÷'};
+    private static final double PARENTHESIS_FACTOR = 0.5;
+    private static final double FRACTION_FACTOR = 0.2;
+    private static final int NUMBER_BOUND = 10;
+    private static final int MAX_LEN = 4;
 
-    public static void main(String[] args) throws Exception {
+
+    public static void main(String[] args){
         Producer producer = new Producer();
-        for (int j = 0; j < 10000000; j++) {
-            Expression e = new Expression(ThreadLocalRandom.current().nextInt(2, 200));
-//            Expression e = new Expression(4);
+        producer.produce(10);
+    }
+
+    public List<Expression> produce(int amount) {
+        List<Expression> expressions = new LinkedList<>();
+        int count = 0;
+        while (count < amount) {
+            Expression e = new Expression(ThreadLocalRandom.current().nextInt(2, MAX_LEN + 1));
             for (int i = 0; i < e.getLen(); i++) {
-                e.getNums()[i] = producer.getRandomNumber(10, 0.2);
+                // 生成运算数
+                e.getNums()[i] = getRandomNumber(NUMBER_BOUND, FRACTION_FACTOR);
                 if (i < e.getLen() - 1) {
-                    e.getOps()[i] = producer.getRandomOperation();
+                    // 生成运算符号
+                    e.getOps()[i] = getRandomOperation();
                 }
             }
-            producer.polish(e, 0, e.getLen() - 1);
-            producer.changeToFraction(e);
+
+            // 生成括号
+            polish(e, 0, e.getLen() - 1);
+            // 小数转换为分数
+            changeToFraction(e);
+            // 计算答案
             Double answer = Calculator.count(e.zhangting());
             if (answer == null || Double.isNaN(answer) || Double.isInfinite(answer)) {
                 e.setCorrect(false);
@@ -34,8 +52,11 @@ public class Producer {
             }
             if (e.isCorrect()) {
                 System.out.println(e + " = " + e.getAnswer());
+                expressions.add(e);
+                count++;
             }
         }
+        return expressions;
     }
 
     private char getRandomOperation() {
@@ -63,12 +84,12 @@ public class Producer {
         }
     }
 
-    private void polish(Expression e, int start, int end) throws Exception {
-        if (end > start && new Random().nextDouble() < 0.9) {
+    private void polish(Expression e, int start, int end) {
+        if (end > start && new Random().nextDouble() < PARENTHESIS_FACTOR) {
             int middle = ThreadLocalRandom.current().nextInt(start, end);
             // 避免在表达式最外层套括号
             if (!(start == 0 && end == e.getLen() - 1)) {
-                if (new Random().nextDouble() < 0.9) {
+                if (new Random().nextDouble() < PARENTHESIS_FACTOR) {
                     e.getParenthesis()[start][0]++;
                     e.getParenthesis()[end][1]++;
                 }
