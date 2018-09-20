@@ -2,6 +2,7 @@ package com.laomi;
 
 import java.util.Arrays;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author zkyyo
@@ -9,9 +10,8 @@ import java.util.Random;
  **/
 public class Test {
     public static void main(String[] args) {
-        int[][] a = new int[10][2];
-        int[][] b = Arrays.copyOf(a, a.length);
-        a[1][1] = 999;
-
+        for (int i = 0; i < 1000; i++) {
+            System.out.println(ThreadLocalRandom.current().nextInt(1, 3));
+        }
     }
 }

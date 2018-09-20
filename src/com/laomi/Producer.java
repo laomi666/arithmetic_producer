@@ -15,15 +15,15 @@ public class Producer {
     public static void main(String[] args) throws Exception {
         Producer producer = new Producer();
         for (int j = 0; j < 100000; j++) {
-//            Expression e = new Expression(ThreadLocalRandom.current().nextInt(1, 3));
-            Expression e = new Expression(4);
+            Expression e = new Expression(ThreadLocalRandom.current().nextInt(2, 5));
+//            Expression e = new Expression(4);
             for (int i = 0; i < e.getLen(); i++) {
-                e.getNums()[i] = producer.getRandomNumber(10, 0.2);
+                e.getNums()[i] = producer.getRandomNumber(100, 0.2);
                 if (i < e.getLen() - 1) {
                     e.getOps()[i] = producer.getRandomOperation();
                 }
             }
-            producer.polish(e, 0, 3);
+            producer.polish(e, 0, e.getLen() - 1);
             System.out.println(e);
         }
     }
@@ -37,7 +37,7 @@ public class Producer {
      *
      * @param bound  最大范围(不包含该参数)
      * @param factor 生成浮点数的概率（0~1）, 该参数越大生成浮点数的概率越高
-     * @return
+     * @return 随机数字
      */
     private Number getRandomNumber(double bound, double factor) {
         if (new Random().nextDouble() < factor) {
@@ -48,13 +48,16 @@ public class Producer {
         }
     }
 
-    private void polish(Expression e, int start, int end) throws Exception{
-        Thread.sleep(100);
-        if (end > start && new Random().nextDouble() < 0.8) {
+    private void polish(Expression e, int start, int end) throws Exception {
+        Thread.sleep(30);
+        if (end > start && new Random().nextDouble() < 1) {
             int middle = ThreadLocalRandom.current().nextInt(start, end);
-            if (new Random().nextDouble() < 0.8) {
-                e.getParenthesis()[start][0]++;
-                e.getParenthesis()[end][1]++;
+            // 避免在表达式最外层套括号
+            if (!(start == 0 && end == e.getLen() - 1)) {
+                if (new Random().nextDouble() < 1) {
+                    e.getParenthesis()[start][0]++;
+                    e.getParenthesis()[end][1]++;
+                }
             }
             polish(e, start, middle);
             polish(e, middle + 1, end);

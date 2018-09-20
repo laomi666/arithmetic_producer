@@ -8,8 +8,6 @@ public class Expression {
     private Number[] nums;
     private char[] ops;
     private int len;
-
-
     private int[][] parenthesis;
 
     public Expression(int len) {
