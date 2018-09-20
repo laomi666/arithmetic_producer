@@ -1,7 +1,7 @@
 package com.laomi;
 
-import java.util.Arrays;
-import java.util.Random;
+import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -10,8 +10,11 @@ import java.util.concurrent.ThreadLocalRandom;
  **/
 public class Test {
     public static void main(String[] args) {
-        for (int i = 0; i < 1000; i++) {
-            System.out.println(ThreadLocalRandom.current().nextInt(1, 3));
-        }
+        List<String> list = new CopyOnWriteArrayList<>();
+        list.add("a");
+        list.add("b");
+        list.add("c");
+        list.add(1, "ccc");
+        System.out.println(list);
     }
 }

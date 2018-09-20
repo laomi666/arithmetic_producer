@@ -1,5 +1,8 @@
 package com.laomi;
 
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * @author zkyyo
  * @since 2018-09-19 13:41
@@ -49,19 +52,42 @@ public class Expression {
         this.parenthesis = parenthesis;
     }
 
+    public List<String> zhangting() {
+        List<String> ting = new LinkedList<>();
+        for (int i = 0; i < len; i++) {
+            int left = parenthesis[i][0];
+            int right = parenthesis[i][1];
+            while (left > 0) {
+                ting.add("(");
+                left--;
+            }
+            ting.add(nums[i] + "");
+            while (right > 0) {
+                ting.add(")");
+                right--;
+            }
+            if (i < len - 1) {
+                ting.add(ops[i] + "");
+            }
+        }
+        return ting;
+    }
+
     @Override
     public String toString() {
         StringBuilder s = new StringBuilder();
         for (int i = 0; i < len; i++) {
-            while (parenthesis[i][0] > 0) {
+            int left = parenthesis[i][0];
+            int right = parenthesis[i][1];
+            while (left > 0) {
                 s.append("(");
-                parenthesis[i][0]--;
+                left--;
             }
             s.append(nums[i]).append(" ");
-            while (parenthesis[i][1] > 0) {
+            while (right > 0) {
                 s = new StringBuilder(s.toString().trim());
                 s.append(") ");
-                parenthesis[i][1]--;
+                right--;
             }
             if (i < len - 1) {
                 s.append(ops[i]).append(" ");

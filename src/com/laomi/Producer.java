@@ -25,6 +25,7 @@ public class Producer {
             }
             producer.polish(e, 0, e.getLen() - 1);
             System.out.println(e);
+            System.out.println(e.zhangting());
         }
     }
 
