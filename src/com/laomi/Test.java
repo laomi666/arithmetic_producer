@@ -10,11 +10,7 @@ import java.util.concurrent.ThreadLocalRandom;
  **/
 public class Test {
     public static void main(String[] args) {
-        List<String> list = new CopyOnWriteArrayList<>();
-        list.add("a");
-        list.add("b");
-        list.add("c");
-        list.add(1, "ccc");
-        System.out.println(list);
+        Number n = 3.0;
+        System.out.println(n);
     }
 }

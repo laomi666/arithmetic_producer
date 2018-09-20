@@ -93,6 +93,6 @@ public class Expression {
                 s.append(ops[i]).append(" ");
             }
         }
-        return s.toString();
+        return s.toString().trim();
     }
 }

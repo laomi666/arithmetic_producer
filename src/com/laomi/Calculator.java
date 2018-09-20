@@ -1,10 +1,13 @@
 package com.laomi;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.zip.DeflaterOutputStream;
 
 /**
  * @author zkyyo
@@ -13,7 +16,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class Calculator {
     private static final List<String> operations = Arrays.asList("+", "-", "x", "÷");
 
-    public static Number count(List<String> e) {
+    public static double count(List<String> e) {
         Stack<String> stack = new Stack<>();
         for (String arg : e) {
             if (!")".equals(arg)) {
@@ -41,10 +44,12 @@ public class Calculator {
             while (!stack.empty()) {
                 subExpression.add(0, stack.pop());
             }
-            return countWithoutParenthesis(subExpression);
+            return (Double) countWithoutParenthesis(subExpression);
         } else {
             return Double.parseDouble(stack.pop());
         }
+
+//        return BigDecimal.valueOf(answer).setScale(1, RoundingMode.HALF_UP).doubleValue();
     }
 
     private static Number countWithoutParenthesis(List<String> e) {

@@ -14,18 +14,20 @@ public class Producer {
 
     public static void main(String[] args) throws Exception {
         Producer producer = new Producer();
-        for (int j = 0; j < 100000; j++) {
-            Expression e = new Expression(ThreadLocalRandom.current().nextInt(2, 5));
+        for (int j = 0; j < 10000000; j++) {
+            Expression e = new Expression(ThreadLocalRandom.current().nextInt(2, 20));
 //            Expression e = new Expression(4);
             for (int i = 0; i < e.getLen(); i++) {
-                e.getNums()[i] = producer.getRandomNumber(100, 0.2);
+                e.getNums()[i] = producer.getRandomNumber(10, 0.2);
                 if (i < e.getLen() - 1) {
                     e.getOps()[i] = producer.getRandomOperation();
                 }
             }
             producer.polish(e, 0, e.getLen() - 1);
-            System.out.println(e);
-            System.out.println(e.zhangting());
+            double answer = Calculator.count(e.zhangting());
+            if (!Double.isNaN(answer) && !Double.isInfinite(answer)) {
+                System.out.println(e + " = " + BigDecimal.valueOf(answer).setScale(1, RoundingMode.HALF_UP).doubleValue());
+            }
         }
     }
 
@@ -50,12 +52,12 @@ public class Producer {
     }
 
     private void polish(Expression e, int start, int end) throws Exception {
-        Thread.sleep(30);
-        if (end > start && new Random().nextDouble() < 1) {
+//        Thread.sleep(30);
+        if (end > start && new Random().nextDouble() < 0.5) {
             int middle = ThreadLocalRandom.current().nextInt(start, end);
             // 避免在表达式最外层套括号
             if (!(start == 0 && end == e.getLen() - 1)) {
-                if (new Random().nextDouble() < 1) {
+                if (new Random().nextDouble() < 0.5) {
                     e.getParenthesis()[start][0]++;
                     e.getParenthesis()[end][1]++;
                 }
