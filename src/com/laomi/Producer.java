@@ -1,11 +1,10 @@
 package com.laomi;
 
+import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -18,11 +17,12 @@ public class Producer {
     private static final double FRACTION_FACTOR = 0.2;
     private static final int NUMBER_BOUND = 10;
     private static final int MAX_LEN = 4;
-
+    private static Set<Expression> equations = new HashSet<>();
 
     public static void main(String[] args){
         Producer producer = new Producer();
         producer.produce(10);
+
     }
 
     public List<Expression> produce(int amount) {
@@ -45,17 +45,22 @@ public class Producer {
             changeToFraction(e);
             // 计算答案
             Double answer = Calculator.count(e.zhangting());
+
             if (answer == null || Double.isNaN(answer) || Double.isInfinite(answer)) {
                 e.setCorrect(false);
             } else {
                 e.setAnswer(answer);
+                //将答案改成分数
+                changeAnswerToFraction(e,answer);
             }
-            if (e.isCorrect()) {
-                System.out.println(e + " = " + e.getAnswer());
+            if (e.isCorrect()&&!JudegeAlreadyExist(e)) {
+                System.out.println(e + " = " + e.getUltimateAnswer());
                 expressions.add(e);
                 count++;
             }
         }
+        ExcersiceBook.CopyProblems(expressions);
+        ExcersiceBook.CopyAnswers(expressions);
         return expressions;
     }
 
@@ -114,10 +119,68 @@ public class Producer {
             numerator = numerator.divide(g);
             denominator = denominator.divide(g);
             int zhenshu = (int) Math.floor(temp);
-            String num = "" + zhenshu;
-            num = num + "'" + numerator.toString() + "/" + denominator.toString();
+            String num ;
+            if(zhenshu!=0)
+            {
+                num = ""+zhenshu+"'"+numerator+"/"+denominator;
+            }
+            else
+            {
+                num = numerator+"/"+denominator;
+            }
             e.getUltimateNumber()[i] = num;
 
+        }
+    }
+
+    private void changeAnswerToFraction(Expression e,double ans)
+    {
+        if((int) ans == ans)
+        {
+            e.setUltimateAnswer((""+(int)ans));
+        }
+        else
+        {
+            int zhenshu =  (int) Math.floor(ans);
+            double decimal = ans-(double) zhenshu;
+            decimal*=100;
+            BigInteger numerator = BigInteger.valueOf((int)decimal);
+            BigInteger denominator = BigInteger.valueOf(100);
+            BigInteger g = numerator.gcd(denominator);
+            if(numerator.equals(BigInteger.ZERO)){
+                e.setUltimateAnswer(""+zhenshu);
+            }
+            else
+            {
+                String answer;
+                numerator = numerator.divide(g);
+                denominator = denominator.divide(g);
+                if(zhenshu!=0)
+                {
+                    answer = ""+zhenshu+"'"+numerator+"/"+denominator;
+                }
+                else
+                {
+                    answer = numerator+"/"+denominator;
+                }
+                e.setUltimateAnswer(answer);
+
+            }
+
+
+        }
+    }
+
+    private boolean JudegeAlreadyExist(Expression e)
+    {
+        if(equations.contains(e))
+        {
+            return true;
+        }
+        else
+        {
+            equations.add(e);
+            return false;
         }
     }
 }

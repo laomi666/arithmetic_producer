@@ -2,8 +2,10 @@ package com.laomi;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author zkyyo
@@ -17,6 +19,8 @@ public class Expression {
     private int[][] parenthesis;
     private boolean isCorrect;
     private double answer;
+    private String ultimateAnswer;
+
 
     public Expression(int len) {
         this.len = len;
@@ -84,7 +88,13 @@ public class Expression {
             this.answer = BigDecimal.valueOf(answer).setScale(1, RoundingMode.HALF_UP).doubleValue();
         }
     }
+    public String getUltimateAnswer() {
+        return ultimateAnswer;
+    }
 
+    public void setUltimateAnswer(String ultimateAnswer) {
+        this.ultimateAnswer = ultimateAnswer;
+    }
     public List<String> zhangting() {
         List<String> ting = new LinkedList<>();
         for (int i = 0; i < len; i++) {
@@ -148,4 +158,47 @@ public class Expression {
         }
         return s.toString();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Expression that = (Expression) o;
+        Number[] comThat;
+        if(len!=that.len)
+        {
+            return false;
+        }
+        Number[] thatnums = new Number[that.len];
+        Number[] thisnums = new Number[len];
+
+        for(int i=0;i<that.len;i++)
+        {
+            thatnums[i] = that.nums[i];
+        }
+        Arrays.sort(thatnums);
+        for(int i=0;i<len;i++)
+        {
+            thisnums[i] = nums[i];
+        }
+        Arrays.sort(thisnums);
+
+        return len == that.len &&
+                isCorrect == that.isCorrect &&
+                Double.compare(that.answer, answer) == 0 &&
+                Arrays.equals(thisnums,thatnums)&&
+                Objects.equals(ultimateAnswer, that.ultimateAnswer);
+    }
+
+    @Override
+    public int hashCode() {
+
+        int result = Objects.hash(len, isCorrect, answer, ultimateAnswer);
+        result = 31 * result + Arrays.hashCode(nums);
+        result = 31 * result + Arrays.hashCode(ultimateNumber);
+        result = 31 * result + Arrays.hashCode(ops);
+        return result;
+    }
+
+
 }
