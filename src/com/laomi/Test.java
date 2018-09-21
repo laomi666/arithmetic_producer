@@ -1,5 +1,6 @@
 package com.laomi;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ThreadLocalRandom;
@@ -9,8 +10,10 @@ import java.util.concurrent.ThreadLocalRandom;
  * @since 2018-09-19 14:20
  **/
 public class Test {
-    public static void main(String[] args) {
-        Number n = 3.0;
-        System.out.println(n);
+    public static void main(String[] args) throws IOException {
+
+        ExcersiceBook.CheckTheAnswer("F:\\arithmetic_producer\\Exercises_1537530984178.txt," ,
+                "F:\\arithmetic_producer\\test.txt");
+
     }
 }
