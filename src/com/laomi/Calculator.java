@@ -7,12 +7,10 @@ import java.util.Stack;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
- * @author zkyyo
+ * @author zkyyo, laomi233
  * @since 2018-09-19 21:45
  **/
 public class Calculator {
-    private static final List<String> operations = Arrays.asList("+", "-", "x", "÷");
-
     public static Double count(List<String> e) {
         Stack<String> stack = new Stack<>();
         for (String arg : e) {
