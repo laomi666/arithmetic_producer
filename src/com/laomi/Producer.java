@@ -9,14 +9,26 @@ import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
- * @author zkyyo
+ * @author zkyyo, laomi233
  * @since 2018-09-19 13:38
  **/
 public class Producer {
     private static final char[] OPERATIONS = {'+', '-', 'x', '÷'};
+    /**
+     * 生成括号概率, 范围为 0~1, 数值越大生成括号概率越大
+     */
     private static final double PARENTHESIS_FACTOR = 0.5;
+    /**
+     * 生成分数概率, 范围为 0~1, 数字越大生成分数概率越大
+     */
     private static final double FRACTION_FACTOR = 0.2;
+    /**
+     * 各个算数值的最大值(不包括)
+     */
     private static final int NUMBER_BOUND = 10;
+    /**
+     * 数值的个数
+     */
     private static final int MAX_LEN = 4;
 
 

@@ -6,7 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @author zkyyo
+ * @author zkyyo, laomi233
  * @since 2018-09-19 13:41
  **/
 public class Expression {
