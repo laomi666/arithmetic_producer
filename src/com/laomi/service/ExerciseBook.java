@@ -45,18 +45,18 @@ public class ExerciseBook {
         }
     }
 
-    public static void CheckTheAnswer(String excersicepath, String useranswerpath) throws IOException {
+    public static void checkAnswers(String exerciseFile, String userAnswerPath) {
 
         List<String> Correct = new ArrayList<>();
         List<String> False = new ArrayList<>();
-        File excersice = new File(excersicepath);
-        String answer_timestamp = excersicepath.substring(excersicepath.lastIndexOf("_") + 1, excersicepath.lastIndexOf("."));
+        File excersice = new File(exerciseFile);
+        String answer_timestamp = exerciseFile.substring(exerciseFile.lastIndexOf("_") + 1, exerciseFile.lastIndexOf("."));
 
         File answer = new File(System.getProperty("user.dir") + "/" + "Answer_" + answer_timestamp + ".txt");
 
         try {
 
-            FileReader readuser = new FileReader(new File(useranswerpath));
+            FileReader readuser = new FileReader(new File(userAnswerPath));
             FileReader readanswer = new FileReader(answer);
             BufferedReader bufferuser = new BufferedReader(readuser);
             BufferedReader bufferanswer = new BufferedReader(readanswer);

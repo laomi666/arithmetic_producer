@@ -1,7 +1,6 @@
 package com.laomi.service;
 
 import com.laomi.bo.Expression;
-import com.laomi.service.Calculator;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -18,28 +17,36 @@ public class Producer {
     /**
      * 生成括号概率, 范围为 0~1, 数值越大生成括号概率越大
      */
-    private static final double PARENTHESIS_FACTOR = 0.5;
+    private double parenthesisFactor = 0.7;
+
     /**
      * 生成分数概率, 范围为 0~1, 数字越大生成分数概率越大
      */
-    private static final double FRACTION_FACTOR = 0.2;
+    private double fractionFactor = 0.2;
+
+    /**
+     * 参与运算的数值的个数
+     */
+    private int maxLen = 4;
+
     /**
      * 各个算数值的最大值(不包括)
      */
-    private static final int NUMBER_BOUND = 10;
-    /**
-     * 数值的个数
-     */
-    private static final int MAX_LEN = 4;
+    private int numberBound;
 
-    public Set<Expression> produce(int amount) {
+    /**
+     * 生成表达式的数量
+     */
+    private int amount;
+
+    public Set<Expression> produce() {
         Set<Expression> expressions = new HashSet<>();
         int count = 0;
         while (count < amount) {
-            Expression e = new Expression(ThreadLocalRandom.current().nextInt(2, MAX_LEN + 1));
+            Expression e = new Expression(ThreadLocalRandom.current().nextInt(2, maxLen + 1));
             for (int i = 0; i < e.getLen(); i++) {
                 // 生成运算数
-                e.getNums()[i] = getRandomNumber(NUMBER_BOUND, FRACTION_FACTOR);
+                e.getNums()[i] = getRandomNumber();
                 if (i < e.getLen() - 1) {
                     // 生成运算符号
                     e.getOps()[i] = getRandomOperation();
@@ -61,7 +68,6 @@ public class Producer {
                 changeAnswerToFraction(e, answer);
             }
             if (e.isCorrect() && !expressions.contains(e)) {
-                System.out.println(e + " = " + e.getUltimateAnswer());
                 expressions.add(e);
                 count++;
             }
@@ -74,15 +80,13 @@ public class Producer {
     }
 
     /**
-     * 生成0(包括0)以上的随机数字
+     * 生成 0(包括 0)以上的随机数字
      *
-     * @param bound  最大范围(不包含该参数)
-     * @param factor 生成浮点数的概率（0~1）, 该参数越大生成浮点数的概率越高
      * @return 随机数字
      */
-    private Number getRandomNumber(double bound, double factor) {
-        if (new Random().nextDouble() < factor) {
-            double d = ThreadLocalRandom.current().nextDouble(0, bound);
+    private Number getRandomNumber() {
+        if (new Random().nextDouble() < fractionFactor) {
+            double d = ThreadLocalRandom.current().nextDouble(0, numberBound);
             d = BigDecimal.valueOf(d).setScale(1, RoundingMode.HALF_UP).doubleValue();
             if (d == (int) d) {
                 return (int) d;
@@ -90,16 +94,16 @@ public class Producer {
                 return d;
             }
         } else {
-            return new Random().nextInt((int) bound);
+            return new Random().nextInt(numberBound);
         }
     }
 
     private void polish(Expression e, int start, int end) {
-        if (end > start && new Random().nextDouble() < PARENTHESIS_FACTOR) {
+        if (end > start && new Random().nextDouble() < parenthesisFactor) {
             int middle = ThreadLocalRandom.current().nextInt(start, end);
             // 避免在表达式最外层套括号
             if (!(start == 0 && end == e.getLen() - 1)) {
-                if (new Random().nextDouble() < PARENTHESIS_FACTOR) {
+                if (new Random().nextDouble() < parenthesisFactor) {
                     e.getParenthesis()[start][0]++;
                     e.getParenthesis()[end][1]++;
                 }
@@ -159,9 +163,47 @@ public class Producer {
                 e.setUltimateAnswer(answer);
 
             }
-
-
         }
+    }
+
+    public double getParenthesisFactor() {
+        return parenthesisFactor;
+    }
+
+    public void setParenthesisFactor(double parenthesisFactor) {
+        this.parenthesisFactor = parenthesisFactor;
+    }
+
+    public double getFractionFactor() {
+        return fractionFactor;
+    }
+
+    public void setFractionFactor(double fractionFactor) {
+        this.fractionFactor = fractionFactor;
+    }
+
+    public int getMaxLen() {
+        return maxLen;
+    }
+
+    public void setMaxLen(int maxLen) {
+        this.maxLen = maxLen;
+    }
+
+    public int getNumberBound() {
+        return numberBound;
+    }
+
+    public void setNumberBound(int numberBound) {
+        this.numberBound = numberBound;
+    }
+
+    public int getAmount() {
+        return amount;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
     }
 }
 
