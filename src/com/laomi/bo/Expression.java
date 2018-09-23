@@ -1,4 +1,4 @@
-package com.laomi;
+package com.laomi.bo;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

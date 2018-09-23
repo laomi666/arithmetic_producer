@@ -1,6 +1,8 @@
-package com.laomi;
+package com.laomi.service;
 
-import java.lang.reflect.Array;
+import com.laomi.bo.Expression;
+import com.laomi.service.Calculator;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
@@ -29,16 +31,9 @@ public class Producer {
      * 数值的个数
      */
     private static final int MAX_LEN = 4;
-    private static Set<Expression> equations = new HashSet<>();
 
-    public static void main(String[] args){
-        Producer producer = new Producer();
-        producer.produce(10);
-
-    }
-
-    public List<Expression> produce(int amount) {
-        List<Expression> expressions = new LinkedList<>();
+    public Set<Expression> produce(int amount) {
+        Set<Expression> expressions = new HashSet<>();
         int count = 0;
         while (count < amount) {
             Expression e = new Expression(ThreadLocalRandom.current().nextInt(2, MAX_LEN + 1));
@@ -63,16 +58,14 @@ public class Producer {
             } else {
                 e.setAnswer(answer);
                 //将答案改成分数
-                changeAnswerToFraction(e,answer);
+                changeAnswerToFraction(e, answer);
             }
-            if (e.isCorrect()&&!JudegeAlreadyExist(e)) {
+            if (e.isCorrect() && !expressions.contains(e)) {
                 System.out.println(e + " = " + e.getUltimateAnswer());
                 expressions.add(e);
                 count++;
             }
         }
-        ExcersiceBook.CopyProblems(expressions);
-        ExcersiceBook.CopyAnswers(expressions);
         return expressions;
     }
 
@@ -131,68 +124,43 @@ public class Producer {
             numerator = numerator.divide(g);
             denominator = denominator.divide(g);
             int zhenshu = (int) Math.floor(temp);
-            String num ;
-            if(zhenshu!=0)
-            {
-                num = ""+zhenshu+"'"+numerator+"/"+denominator;
-            }
-            else
-            {
-                num = numerator+"/"+denominator;
+            String num;
+            if (zhenshu != 0) {
+                num = "" + zhenshu + "'" + numerator + "/" + denominator;
+            } else {
+                num = numerator + "/" + denominator;
             }
             e.getUltimateNumber()[i] = num;
 
         }
     }
 
-    private void changeAnswerToFraction(Expression e,double ans)
-    {
-        if((int) ans == ans)
-        {
-            e.setUltimateAnswer((""+(int)ans));
-        }
-        else
-        {
-            int zhenshu =  (int) Math.floor(ans);
-            double decimal = ans-(double) zhenshu;
-            decimal*=100;
-            BigInteger numerator = BigInteger.valueOf((int)decimal);
+    private void changeAnswerToFraction(Expression e, double ans) {
+        if ((int) ans == ans) {
+            e.setUltimateAnswer(("" + (int) ans));
+        } else {
+            int zhenshu = (int) Math.floor(ans);
+            double decimal = ans - (double) zhenshu;
+            decimal *= 100;
+            BigInteger numerator = BigInteger.valueOf((int) decimal);
             BigInteger denominator = BigInteger.valueOf(100);
             BigInteger g = numerator.gcd(denominator);
-            if(numerator.equals(BigInteger.ZERO)){
-                e.setUltimateAnswer(""+zhenshu);
-            }
-            else
-            {
+            if (numerator.equals(BigInteger.ZERO)) {
+                e.setUltimateAnswer("" + zhenshu);
+            } else {
                 String answer;
                 numerator = numerator.divide(g);
                 denominator = denominator.divide(g);
-                if(zhenshu!=0)
-                {
-                    answer = ""+zhenshu+"'"+numerator+"/"+denominator;
-                }
-                else
-                {
-                    answer = numerator+"/"+denominator;
+                if (zhenshu != 0) {
+                    answer = "" + zhenshu + "'" + numerator + "/" + denominator;
+                } else {
+                    answer = numerator + "/" + denominator;
                 }
                 e.setUltimateAnswer(answer);
 
             }
 
 
-        }
-    }
-
-    private boolean JudegeAlreadyExist(Expression e)
-    {
-        if(equations.contains(e))
-        {
-            return true;
-        }
-        else
-        {
-            equations.add(e);
-            return false;
         }
     }
 }

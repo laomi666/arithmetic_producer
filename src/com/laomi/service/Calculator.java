@@ -1,4 +1,4 @@
-package com.laomi;
+package com.laomi.service;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -115,11 +115,4 @@ public class Calculator {
         }
         return 1;
     }
-
-    public static void main(String[] args) {
-        List<String> list = Arrays.asList("3", "-", "6", "x", "8", "÷", "(", "3", "-", "6", ")", "x", "3", "+", "4");
-//        List<String> list = Arrays.asList("2", "x", "(", "6", "-", "4", ")");
-        System.out.println("-----------" + count(list));
-    }
-
 }

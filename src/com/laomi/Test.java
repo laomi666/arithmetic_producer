@@ -1,5 +1,7 @@
 package com.laomi;
 
+import com.laomi.service.ExerciseBook;
+
 import java.io.IOException;
 
 /**
@@ -9,7 +11,7 @@ import java.io.IOException;
 public class Test {
     public static void main(String[] args) throws IOException {
 
-        ExcersiceBook.CheckTheAnswer("F:\\arithmetic_producer\\Exercises_1537530984178.txt," ,
+        ExerciseBook.CheckTheAnswer("F:\\arithmetic_producer\\Exercises_1537530984178.txt," ,
                 "F:\\arithmetic_producer\\test.txt");
 
     }
