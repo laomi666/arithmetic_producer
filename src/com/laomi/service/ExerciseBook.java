@@ -10,9 +10,8 @@ import java.util.List;
 
 public class ExerciseBook {
 
-
     public static void generateFile(List<Expression> expressions) {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss");
         LocalDateTime now = LocalDateTime.now();
         String current = dtf.format(now);
 

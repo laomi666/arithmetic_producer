@@ -30,20 +30,6 @@ public class Main {
         }
     }
 
-    private static void correct(String[] args) {
-        String exerciseFile = null;
-        String answerFile = null;
-        try {
-            exerciseFile = args[findArgIndex(args, EXERCISE_FILE)];
-            answerFile = args[findArgIndex(args, ANSWER_FILE)];
-        } catch (Exception ignore) {
-            System.out.println("参数不合法");
-            System.exit(-1);
-        }
-
-        ExerciseBook.checkAnswers(exerciseFile, answerFile);
-    }
-
     private static void generate(String[] args) {
         int amount = -1;
         int numberBound = -1;
@@ -66,7 +52,22 @@ public class Main {
         Set<Expression> expressions = producer.produce();
         // 分别生成算术表达式和答案文件
         ExerciseBook.generateFile(new ArrayList<>(expressions));
-        System.out.println("成功生成 " + amount + " 道算术题 d=====(￣▽￣*)b");
+        System.out.println("成功生成 " + amount + " 道算术题");
+    }
+
+    private static void correct(String[] args) {
+        String exerciseFile = null;
+        String answerFile = null;
+        try {
+            exerciseFile = args[findArgIndex(args, EXERCISE_FILE)];
+            answerFile = args[findArgIndex(args, ANSWER_FILE)];
+        } catch (Exception ignore) {
+            System.out.println("参数不合法");
+            System.exit(-1);
+        }
+
+        ExerciseBook.checkAnswers(exerciseFile, answerFile);
+        System.out.println("分数已批改完毕 d=====(￣▽￣*)b");
     }
 
     private static boolean checkArgs(String[] args, String...target) {
