@@ -60,7 +60,9 @@ public class Calculator {
         int start = 0;
         int index;
         while ((index = getOperationIndex(exp, start, "x", "÷")) != -1) {
-            operation(exp, index);
+            if( operation(exp, index) == -1) {
+                return null;
+            }
             start = index - 1;
         }
         start = 0;
@@ -99,7 +101,7 @@ public class Calculator {
                 e.add(index - 1, pre * post + "");
                 break;
             case "÷":
-                if (pre < post) { // 避免产生假分数
+                if (pre > post) { // 避免产生假分数
                     return -1;
                 }
                 e.add(index - 1, pre / post + "");
