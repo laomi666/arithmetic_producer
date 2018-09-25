@@ -99,13 +99,16 @@ public class Calculator {
                 e.add(index - 1, pre * post + "");
                 break;
             case "÷":
+                if (pre < post) { // 避免产生假分数
+                    return -1;
+                }
                 e.add(index - 1, pre / post + "");
                 break;
             case "+":
                 e.add(index - 1, pre + post + "");
                 break;
             case "-":
-                if (pre < post) {
+                if (pre < post) { // 避免产生负数
                     return -1;
                 }
                 e.add(index - 1, pre - post + "");
