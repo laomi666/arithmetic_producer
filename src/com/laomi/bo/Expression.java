@@ -85,7 +85,8 @@ public class Expression {
 
     public void setAnswer(double answer) {
         if (!Double.isNaN(answer) && !Double.isInfinite(answer)) {
-            this.answer = BigDecimal.valueOf(answer).setScale(1, RoundingMode.HALF_UP).doubleValue();
+//            this.answer = BigDecimal.valueOf(answer).setScale(1, RoundingMode.HALF_UP).doubleValue();
+            this.answer = answer;
         }
     }
     public String getUltimateAnswer() {
