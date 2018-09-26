@@ -7,6 +7,10 @@ import java.math.BigInteger;
 
 import static java.lang.Math.min;
 
+/**
+ * @author zkyyo, laomi233
+ * @since 2018-09-25 20:48
+ **/
 public class Fraction {
 
     public static String[] elements;

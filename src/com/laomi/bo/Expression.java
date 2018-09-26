@@ -112,7 +112,6 @@ public class Expression {
     }
 
     public List<String> zhangting() {
-
         List<String> ting = new LinkedList<>();
         Fraction.convertToFraction(this);
         setNumsToString(Fraction.elements);

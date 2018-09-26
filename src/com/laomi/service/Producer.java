@@ -40,6 +40,10 @@ public class Producer {
      */
     private int amount;
 
+    /**
+     * 生成表达式
+     * @return 表达式集合
+     */
     public Set<Expression> produce() {
         Set<Expression> expressions = new HashSet<>();
         int count = 0;
@@ -78,6 +82,10 @@ public class Producer {
         return expressions;
     }
 
+    /**
+     * 生成随机运算符
+     * @return 随即运算符
+     */
     private char getRandomOperation() {
         return OPERATIONS[new Random().nextInt(OPERATIONS.length)];
     }
@@ -101,6 +109,13 @@ public class Producer {
         }
     }
 
+
+    /**
+     * 递归生成括号
+     * @param e 表达式
+     * @param start 从哪里开始生成括号
+     * @param end 到哪里停止生成括号
+     */
     private void polish(Expression e, int start, int end) {
         if (end > start && new Random().nextDouble() < parenthesisFactor) {
             int middle = ThreadLocalRandom.current().nextInt(start, end);

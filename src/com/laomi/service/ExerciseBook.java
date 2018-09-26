@@ -11,6 +11,10 @@ import java.util.List;
 
 public class ExerciseBook {
 
+    /**
+     * 生成问卷和答案文本
+     * @param expressions 表达式列表
+     */
     public static void generateFile(List<Expression> expressions) {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss");
         LocalDateTime now = LocalDateTime.now();
@@ -67,7 +71,12 @@ public class ExerciseBook {
         }
     }
 
-    //测试答案文件与输入文件正确与错误
+
+    /**
+     * 检查用户输入的答案是否正确并作出批改
+     * @param exerciseFile 问卷地址
+     * @param userAnswerPath 用户的答卷
+     */
     public static void checkAnswers(String exerciseFile, String userAnswerPath) {
 
         List<String> Correct = new ArrayList<>();

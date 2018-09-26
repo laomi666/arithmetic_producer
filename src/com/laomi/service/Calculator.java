@@ -10,6 +10,11 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * @since 2018-09-19 21:45
  **/
 public class Calculator {
+    /**
+     * 对表达式进行计算
+     * @param e 表达式
+     * @return 运算结果
+     */
     public static String count(List<String> e) {
         Stack<String> stack = new Stack<>();
         for (String arg : e) {
@@ -48,9 +53,13 @@ public class Calculator {
         }
         return result;
 
-//        return BigDecimal.valueOf(answer).setScale(1, RoundingMode.HALF_UP).doubleValue();
     }
 
+    /**
+     * 计算没有括号参与的情景, 类似 3 + 2 / 10
+     * @param e 表达式
+     * @return 运算结果
+     */
     private static String countWithoutParenthesis(List<String> e) {
         List<String> exp = new CopyOnWriteArrayList<>(e);
         int start = 0;
@@ -72,6 +81,14 @@ public class Calculator {
         return exp.get(0);
     }
 
+
+    /**
+     * 获取表达式特定操作符的下标
+     * @param e 表达式
+     * @param start 从哪里开始获取
+     * @param ops 特定的操作符
+     * @return 下标
+     */
     private static int getOperationIndex(List<String> e, int start, String... ops) {
         for (int i = start; i < e.size(); i++) {
             String arg = e.get(i);
@@ -84,7 +101,12 @@ public class Calculator {
         return -1;
     }
 
-
+    /**
+     * 根据操作符对操作数进行操纵
+     * @param e 表达式
+     * @param index 操作符下标
+     * @return 操作成功返回1, 失败返回-1
+     */
     private static int operation(List<String> e, int index) {
         String op = e.get(index);
 
