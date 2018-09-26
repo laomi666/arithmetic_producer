@@ -1,5 +1,7 @@
 package com.laomi.bo;
 
+import com.laomi.service.Fraction;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Arrays;
@@ -14,6 +16,7 @@ import java.util.Objects;
 public class Expression {
     private Number[] nums;
     private String[] ultimateNumber;
+    private String[] numsToString;
     private char[] ops;
     private int len;
     private int[][] parenthesis;
@@ -22,13 +25,16 @@ public class Expression {
     private String ultimateAnswer;
 
 
+
     public Expression(int len) {
         this.len = len;
         this.nums = new Number[len];
+        this.numsToString = new String[len];
         this.ops = new char[len - 1];
         this.parenthesis = new int[len][2];
         this.ultimateNumber = new String[len];
         this.isCorrect = true;
+        this.ultimateAnswer = new String();
     }
 
     public Number[] getNums() {
@@ -85,8 +91,8 @@ public class Expression {
 
     public void setAnswer(double answer) {
         if (!Double.isNaN(answer) && !Double.isInfinite(answer)) {
-//            this.answer = BigDecimal.valueOf(answer).setScale(1, RoundingMode.HALF_UP).doubleValue();
-            this.answer = answer;
+            this.answer = BigDecimal.valueOf(answer).setScale(4, RoundingMode.HALF_UP).doubleValue();
+//            this.answer = answer;
         }
     }
     public String getUltimateAnswer() {
@@ -96,8 +102,20 @@ public class Expression {
     public void setUltimateAnswer(String ultimateAnswer) {
         this.ultimateAnswer = ultimateAnswer;
     }
+
+    public String[] getNumsToString() {
+        return numsToString;
+    }
+
+    public void setNumsToString(String[] numsToString) {
+        this.numsToString = numsToString;
+    }
+
     public List<String> zhangting() {
+
         List<String> ting = new LinkedList<>();
+        Fraction.convertToFraction(this);
+        setNumsToString(Fraction.elements);
         for (int i = 0; i < len; i++) {
             int left = parenthesis[i][0];
             int right = parenthesis[i][1];
@@ -105,7 +123,7 @@ public class Expression {
                 ting.add("(");
                 left--;
             }
-            ting.add(nums[i] + "");
+            ting.add(numsToString[i] + "");
             while (right > 0) {
                 ting.add(")");
                 right--;
@@ -116,7 +134,7 @@ public class Expression {
         }
         return ting;
     }
-
+//
     public String printOrigin() {
         StringBuilder s = new StringBuilder();
         for (int i = 0; i < len; i++) {
@@ -147,7 +165,8 @@ public class Expression {
                 s.append("(");
                 parenthesis[i][0]--;
             }
-            s.append(ultimateNumber[i]).append(" ");
+//            s.append(ultimateNumber[i]).append(" ");
+            s.append(numsToString[i]).append(" ");
             while (parenthesis[i][1] > 0) {
                 s = new StringBuilder(s.toString().trim());
                 s.append(") ");
@@ -175,12 +194,12 @@ public class Expression {
 
         for(int i=0;i<that.len;i++)
         {
-            thatnums[i] = that.nums[i];
+            thatnums[i] = that.nums[i].doubleValue();
         }
         Arrays.sort(thatnums);
         for(int i=0;i<len;i++)
         {
-            thisnums[i] = nums[i];
+            thisnums[i] = nums[i].doubleValue();
         }
         Arrays.sort(thisnums);
 

@@ -1,6 +1,5 @@
 package com.laomi.service;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
@@ -11,7 +10,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * @since 2018-09-19 21:45
  **/
 public class Calculator {
-    public static Double count(List<String> e) {
+    public static String count(List<String> e) {
         Stack<String> stack = new Stack<>();
         for (String arg : e) {
             if (!")".equals(arg)) {
@@ -21,7 +20,7 @@ public class Calculator {
                 while (!stack.empty()) {
                     if ("(".equals(stack.peek())) {
                         stack.pop();
-                        Number result = countWithoutParenthesis(subExpression);
+                        String result = countWithoutParenthesis(subExpression);
                         if (result == null) {
                             return null;
                         }
@@ -34,28 +33,25 @@ public class Calculator {
             }
         }
 
-//        while (!stack.empty()) {
-//            System.out.println(stack.pop());
-//        }
-        Double result;
+        String result;
         if (stack.size() > 1) {
             List<String> subExpression = new LinkedList<>();
             while (!stack.empty()) {
                 subExpression.add(0, stack.pop());
             }
-            result = (Double) countWithoutParenthesis(subExpression);
+            result = countWithoutParenthesis(subExpression);
             if (result == null) {
                 return null;
             }
         } else {
-            result = Double.parseDouble(stack.pop());
+            result = stack.pop();
         }
         return result;
 
 //        return BigDecimal.valueOf(answer).setScale(1, RoundingMode.HALF_UP).doubleValue();
     }
 
-    private static Number countWithoutParenthesis(List<String> e) {
+    private static String countWithoutParenthesis(List<String> e) {
         List<String> exp = new CopyOnWriteArrayList<>(e);
         int start = 0;
         int index;
@@ -73,7 +69,7 @@ public class Calculator {
             start = index - 1;
         }
 
-        return Double.parseDouble(exp.get(0));
+        return exp.get(0);
     }
 
     private static int getOperationIndex(List<String> e, int start, String... ops) {
@@ -88,32 +84,41 @@ public class Calculator {
         return -1;
     }
 
+
     private static int operation(List<String> e, int index) {
         String op = e.get(index);
-        double pre = Double.parseDouble(e.get(index - 1));
-        double post = Double.parseDouble(e.get(index + 1));
+
+
+        String pre = e.get(index-1);
+        String post = e.get(index+1);
+
+
         // 从后往前删除
         e.remove(index + 1);
         e.remove(index);
         e.remove(index - 1);
         switch (op) {
             case "x":
-                e.add(index - 1, pre * post + "");
+                e.add(index - 1,  Fraction.fractionMultiply(pre,post)+ "");
                 break;
             case "÷":
-                if (pre > post) { // 避免产生假分数
+                if (Fraction.fractionCompare(pre,post).equals(">")) { // 避免产生假分数
                     return -1;
                 }
-                e.add(index - 1, pre / post + "");
+                String divide = Fraction.fractionDivide(pre, post);
+                if (divide == null) { // 出现除以0的情况
+                    return -1;
+                }
+                e.add(index - 1, divide);
                 break;
             case "+":
-                e.add(index - 1, pre + post + "");
+                e.add(index - 1, Fraction.fractionAdd(pre,post) + "");
                 break;
             case "-":
-                if (pre < post) { // 避免产生负数
+                if (Fraction.fractionCompare(pre,post).equals("<")) { // 避免产生负数
                     return -1;
                 }
-                e.add(index - 1, pre - post + "");
+                e.add(index - 1, Fraction.fractionSubstract(pre,post) + "");
                 break;
             default:
                 break;

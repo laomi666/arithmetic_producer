@@ -6,6 +6,7 @@ import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class ExerciseBook {
@@ -15,17 +16,39 @@ public class ExerciseBook {
         LocalDateTime now = LocalDateTime.now();
         String current = dtf.format(now);
 
+
         // 生成问卷
         StringBuilder question = new StringBuilder();
+
+        //将表达式中的假分数化成真分数
         for (int i = 0; i < expressions.size(); i++) {
             Expression e = expressions.get(i);
-            question.append("" + (i + 1) + ". " + e + " =" + "\r\n");
+            for(int j=0;j<e.getLen();j++)
+            {
+                if(e.getNumsToString()[j].contains("/"))
+                {
+                    String toTrue = Fraction.toRealFraction(e.getNumsToString()[j]);
+                    if(toTrue!=null)
+                    {
+                        e.getNumsToString()[j] = toTrue;
+                    }
+                }
+            }
+            question.append("" + (i + 1) + ". " + e + "=" + "\r\n");
         }
 
         // 生成答案
         StringBuilder answer = new StringBuilder();
         for (int i = 0; i < expressions.size(); i++) {
             Expression e = expressions.get(i);
+            if(e.getUltimateAnswer().contains("/"))
+            {
+                String AnswerToTrue = Fraction.toRealFraction(e.getUltimateAnswer());
+                if(AnswerToTrue!=null)
+                {
+                    e.setUltimateAnswer(AnswerToTrue);
+                }
+            }
             answer.append("" + (i + 1) + ". " + e.getUltimateAnswer() + "\r\n");
         }
 
@@ -44,6 +67,7 @@ public class ExerciseBook {
         }
     }
 
+    //测试答案文件与输入文件正确与错误
     public static void checkAnswers(String exerciseFile, String userAnswerPath) {
 
         List<String> Correct = new ArrayList<>();

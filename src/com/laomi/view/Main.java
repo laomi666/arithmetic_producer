@@ -51,6 +51,7 @@ public class Main {
         // 生成表达式
         Set<Expression> expressions = producer.produce();
         // 分别生成算术表达式和答案文件
+
         ExerciseBook.generateFile(new ArrayList<>(expressions));
         System.out.println("成功生成 " + amount + " 道算术题");
     }
